@@ -1,0 +1,32 @@
+name: EUserv Auto Extend
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '50 0 * * *'
+
+jobs:
+  auto_renew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout codes
+        uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          pip3 install --upgrade requests
+          pip3 install --upgrade beautifulsoup4
+          pip3 install --upgrade pyairtable
+      - name: Extending
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          TRUECAPTCHA_USERID: ${{ secrets.TRUECAPTCHA_USERID }}
+          TRUECAPTCHA_APIKEY: ${{ secrets.TRUECAPTCHA_APIKEY }}
+          MAILPARSER_DOWNLOAD_URL_ID: ${{ secrets.MAILPARSER_DOWNLOAD_URL_ID }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_USER_ID: ${{ secrets.TG_USER_ID }}
+        run: python3 main.py
